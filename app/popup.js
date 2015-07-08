@@ -3,7 +3,9 @@ document.addEventListener('DOMContentLoaded', init);
 
 function init() {
     document.getElementById("email_form").addEventListener("submit", function (e) {
-        var FirstName = document.getElementById("FirstName").value.replace(/[\s]+/, "");
+        document.getElementById("status-icon").innerHTML = "<img src='img/ajax-loader.gif' />";
+		
+		var FirstName = document.getElementById("FirstName").value.replace(/[\s]+/, "");
         var LastName = document.getElementById("LastName").value.replace(/[\s]+/, "");
         var DomainName = document.getElementById("DomainName").value.replace(/[\s]+/, "");
         
@@ -44,7 +46,7 @@ function init() {
             xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
         }
         
-        xmlhttp.open("GET", "http://localhost:42031/api/EmailStatus?email="+email, true);
+        xmlhttp.open("GET", "http://validateemail.apphb.com/api/EmailStatus?email="+email, true);
         xmlhttp.setRequestHeader("Accept", "application/json;charset=UTF-8");
 		xmlhttp.setRequestHeader("Access-Control-Allow-Origin", "*");
         xmlhttp.send();
@@ -52,11 +54,20 @@ function init() {
         xmlhttp.onreadystatechange = function () {
             if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
                 if (xmlhttp.responseText) { // the onreadystatechange executes multiple times, so this check is required
-                    alert(xmlhttp.responseText);
+                    var response = JSON.parse(xmlhttp.responseText);
+					//document.getElementById("json").innerText = xmlhttp.responseText;
+					document.getElementById("email-address").innerText = response.address;
+					if(response.status == "valid" || response.status == "Accept All") {
+						document.getElementById("status-icon").innerHTML = "<img src='img/green-checkmark.png' />";
+					} else if(response.status == "invalid") {
+						document.getElementById("status-icon").innerHTML = "<img src='img/red-crossmark.png' />";
+					} else if(response.status == "unknown") {
+						document.getElementById("status-icon").innerHTML = "<img src='img/red-crossmark.png' />";
+					}
                 }
             }
         }
-
+		
         e.preventDefault();
     });
 }
