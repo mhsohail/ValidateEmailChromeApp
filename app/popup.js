@@ -62,7 +62,7 @@ function init() {
 					} else if(response.status == "invalid") {
 						document.getElementById("status-icon").innerHTML = "<img src='img/red-crossmark.png' />";
 					} else if(response.status == "unknown") {
-						document.getElementById("status-icon").innerHTML = "<img src='img/red-crossmark.png' />";
+						document.getElementById("status-icon").innerHTML = "<img src='img/grey-box.png' />";
 					}
                 }
             }
