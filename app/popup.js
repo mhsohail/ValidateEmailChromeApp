@@ -3,41 +3,24 @@ document.addEventListener('DOMContentLoaded', init);
 
 function init() {
     document.getElementById("email_form").addEventListener("submit", function (e) {
-        document.getElementById("status-icon").innerHTML = "<img src='img/ajax-loader.gif' />";
-		
-		var FirstName = document.getElementById("FirstName").value.replace(/[\s]+/, "");
-        var LastName = document.getElementById("LastName").value.replace(/[\s]+/, "");
-        var DomainName = document.getElementById("DomainName").value.replace(/[\s]+/, "");
+		var Email = document.getElementById("email").value;
         
-        if (FirstName == "" || LastName == "" || DomainName == "") {
+        if (Email == "" || Email == null || typeof Email == "undefined") {
             alert("Fill all fields.");
             e.preventDefault();
             return;
         }
-        
-        var InvalidFirstNameMatch = FirstName.match(/[^A-Za-z]+/);
-        if (InvalidFirstNameMatch != null) {
-            alert("Invalid First Name.");
-            e.preventDefault();
-            return;
-        }
-
-        var InvalidLastNameMatch = LastName.match(/[^A-Za-z]+/);
-        if (InvalidLastNameMatch != null) {
-            alert("Invalid Last Name.");
-            e.preventDefault();
-            return;
-        }
-        
-        var InvalidDomainNameMatch = DomainName.match(/[^A-Za-z\.]+/);
-        if (InvalidDomainNameMatch != null) {
-            alert("Invalid Domain Name.");
-            e.preventDefault();
-            return;
-        }
-        
-        var email = FirstName + "." + LastName + "@" + DomainName;
 		
+        var InvalidEmailMatch = Email.match(/[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/);
+        
+		if (InvalidEmailMatch == null) {
+            alert("Invalid email format.");
+            e.preventDefault();
+            return;
+        }
+		
+		document.getElementById("status-icon").innerHTML = "<img src='img/ajax-loader.gif' />";
+        
         var xmlhttp;
         if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
             xmlhttp = new XMLHttpRequest();
@@ -46,7 +29,7 @@ function init() {
             xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
         }
         
-        xmlhttp.open("GET", "http://validateemail.apphb.com/api/EmailStatus?email="+email, true);
+        xmlhttp.open("GET", "http://validateemail.apphb.com/api/EmailStatus?email="+Email, true);
         xmlhttp.setRequestHeader("Accept", "application/json;charset=UTF-8");
 		xmlhttp.setRequestHeader("Access-Control-Allow-Origin", "*");
         xmlhttp.send();
